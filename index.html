@@ -3,29 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <script
-        src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script>
-    <script type="text/javascript" src="assets/javascript/main.js"></script>
     <title>Train Scheduler</title>
 </head>
 <body>
     <div class="top-header">
         <h1>Anytime is Train Time</h1>
-        <p>Choo choo!!</p>
+        <h3>Choo choo!!</h3>
     </div>
     
     <div class="train-schedule">
-        <div class="div-header">
-            Current Train Schedule
-        </div>
+        <div class="div-header">Current Train Schedule</div>
+        <table class="train-table">
+            <thead>
+                <tr>
+                    <th scope="col">Train Name</th>
+                    <th scope="col">Destination</th> 
+                    <th scope="col">Frequency (min)</th> 
+                    <th scope="col">Next Arrival</th> 
+                    <th scope="col">Minutes Away</th>  
+                </tr>
+            </thead>
+            <tbody id="train-data"></tbody>
+        </table>
     </div>
+
     <div class="add-train">
+
         <div class="div-header">
             Add Train
         </div>
+        
+        <p>Train Name</p>
+        <input type="text" id = "train-name" class="add-input">
+        <p>Destination</p>
+        <input type="text" id = "destination" class="add-input">
+        <p>First Train Time (HH:mm - military time)</p>
+        <input type="text" id = "first-train" class="add-input">
+        <div id="first-train-data-validation" class="validation-warning"></div>
+        <p>Frequency (min)</p>
+        <input type="text" id = "frequency" class="add-input">
+        <div id="freq-data-validation" class="validation-warning"></div>
+        <br>
+        <button id="btn-submit">Submit</button>
+        <div id="submit-data-validation" class="validation-warning"></div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-database.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/javascript/main.js"></script>
 </body>
 </html>
