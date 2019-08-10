@@ -37,17 +37,22 @@
         
         <p>Train Name</p>
         <input type="text" id = "train-name" class="add-input">
+        <div id="name-data-validation" class="validation-warning"></div>
+
         <p>Destination</p>
         <input type="text" id = "destination" class="add-input">
+        <div id="destination-data-validation" class="validation-warning"></div>
+
         <p>First Train Time (HH:mm - military time)</p>
         <input type="text" id = "first-train" class="add-input">
         <div id="first-train-data-validation" class="validation-warning"></div>
+
         <p>Frequency (min)</p>
         <input type="text" id = "frequency" class="add-input">
         <div id="freq-data-validation" class="validation-warning"></div>
+
         <br>
-        <button id="btn-submit">Submit</button>
-        <div id="submit-data-validation" class="validation-warning"></div>
+        <button id="btn-submit">Submit</button><span id="submit-data-validation" class="validation-warning"></span>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>

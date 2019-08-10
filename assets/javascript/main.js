@@ -27,6 +27,7 @@ function writeTrainData(trainName, destination, firstTrainTime, frequency)
     // return firebase.database.ref().update()
 }  
 
+// Retrieve data from the database and display it in a table
 database.ref('trainInfo/').on('value', function(data)
 {
     $('#train-data').empty();
@@ -39,14 +40,15 @@ database.ref('trainInfo/').on('value', function(data)
         let dataFirstTime = dataObject[id].firstTime;
         let dataFrequency = dataObject[id].frequency;
         let dataName = dataObject[id].name;
-        let nextArrival = moment().add(parseInt(dataFrequency), 'minute').format('HH:mm'); // use moment().add(number, String) method
-        
+        let nextArrival = moment().add(parseInt(dataFrequency), 'minute'); // use moment().add(number, String) method
+        let minutesAway = nextArrival.diff(moment(), 'minute');
+
         $('#train-data').append(
             '<tr><td>' + dataName + '</td>' // Train Name
             + '<td>' + dataDestination + '</td>' // Destination
-            + '<td>' + dataFrequency + ' minutes</td>' // Frequency
-            + '<td>' + nextArrival + '</td>' // Next Arrival
-            + '<td>' + '-' + '</td></tr>' // Minutes Away
+            + '<td>' + dataFrequency + '</td>' // Frequency
+            + '<td>' + nextArrival.format('hh:mm a') + '</td>' // Next Arrival
+            + '<td>' + minutesAway + '</td></tr>' // Minutes Away
         );
     }
 });
@@ -62,8 +64,7 @@ function toTitleCase(word)
     return wordArray.join(' ')
 }
 
-// writeUserData('test', 'test destination', 'test time', 'test frequency');
-
+// Warning if the data in the input boxes does not meet the data type criteria
 function dataValidationWarning()
 {   
     if (this.id == 'first-train')
@@ -71,26 +72,38 @@ function dataValidationWarning()
         var timeInput = $(this).val();
         if (!timeInput.match(/^\d{2}:\d{2}$/))
         {
-            $('#first-train-data-validation').text("Please enter a valid time in this format HH:mm");
+            $(this).next().text("Please enter a valid time in this format HH:mm");
         }
         else
         {
-            $('#first-train-data-validation').text('');
+            $(this).next().text('');
         }
     }
     else if (this.id == 'frequency')
     {
         if (!parseInt($(this).val()))
         {
-            $('#freq-data-validation').text('Please enter a number');
+            $(this).next().text('Please enter a number');
         }
         else
         {
-            $('#freq-data-validation').text('');
+            $(this).next().text('');
+        }
+    }
+    else // if (this.id == 'train-name' || this.id == 'destination')
+    {
+        if ($(this).val() == '')
+        {
+            $(this).next().text('Please enter a valid value')
+        }
+        else
+        {
+            $(this).next().text('');
         }
     }
 }
 
+// FUNCTION to validate the data before submitting to the database. Returns true if all inputs are valid, else it returns false
 function validateData(name, destination, firstTrainTime, frequency)
 {
     if (name !== '' && destination !== '' && firstTrainTime.match(/^\d{2}:\d{2}$/) && parseInt(frequency))
@@ -100,36 +113,34 @@ function validateData(name, destination, firstTrainTime, frequency)
     }
     else
     {
+        console.log("Invalid user data");
+        
         return false;
     }
 
 }
 
-function clearForm()
-{
-    $('#train-name').val('');
-    $('#destination').val('');
-    $('#first-train').val('');
-    $('#frequency').val('');
-}
 
+// EVENT on blur to inform the user that the data in the input box is valid/invalid
+$('#destination').on('blur', dataValidationWarning)
+$('#train-name').on('blur', dataValidationWarning)
 $('#first-train').on('blur', dataValidationWarning)
 $('#frequency').on('blur', dataValidationWarning)
 
-
+// EVENT on submit button
 $('#btn-submit').on('click', function(e) 
 {
     e.preventDefault();
     var inputTrainName = toTitleCase($('#train-name').val());
     var inputDestination = toTitleCase($('#destination').val());
-    var inputFirstTrainTime = toTitleCase($('#first-train').val());
-    var inputFrequency = toTitleCase($('#frequency').val());
+    var inputFirstTrainTime = $('#first-train').val();
+    var inputFrequency = $('#frequency').val();
 
     if (validateData(inputTrainName, inputDestination, inputFirstTrainTime, inputFrequency))
     {
         $('#submit-data-validation').text('');
         writeTrainData(inputTrainName, inputDestination, inputFirstTrainTime, inputFrequency);
-        clearForm();
+        $('input').val('');
     }  
     else
     {
@@ -137,7 +148,5 @@ $('#btn-submit').on('click', function(e)
     }
 });
 
-
-console.log(moment().add(30, 'minute').format('HH:mm'));
 
 
